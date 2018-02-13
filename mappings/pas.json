@@ -1,0 +1,54 @@
+{
+    "settings": {
+        "number_of_shards": 1,
+        "number_of_replicas": 0,
+        "analysis": {
+            "analyzer": {
+                "ngram_analyzer": {
+                    "type": "custom",
+                    "tokenizer": "my_tokenizer",
+                    "filter": [
+                        "lowercase"
+                    ]
+                }
+            },
+            "tokenizer": {
+                "my_tokenizer": {
+                    "type": "ngram",
+                    "min_gram": 3,
+                    "max_gram": 3,
+                    "token_chars": [
+                        "letter",
+                        "digit"
+                    ]
+                }
+            }
+        }
+    },
+    "mappings": {
+        "pas": {
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "applicant_name": {
+                    "type": "text",
+                    "analyzer": "ngram_analyzer"
+                },
+                "device_name": {
+                    "type": "text",
+                    "analyzer": "ngram_analyzer"
+                },
+                "medical_speciality": {
+                    "type": "keyword"
+                },
+                "study_name": {
+                    "type": "text"
+                },
+                "study_design_description": {
+                    "type": "text"
+                }
+            }
+        }
+    }
+}

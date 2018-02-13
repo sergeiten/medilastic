@@ -14,6 +14,14 @@ func NewRepository(name string, db *sql.DB) Repository {
 		return NewPermitStatusRepository(db)
 	case "fda":
 		return NewFDARepository(db)
+	case "kimes":
+		return NewKimesRepository(db)
+	case "medica":
+		return NewMedicaRepository(db)
+	case "pas":
+		return NewPasRepository(db)
+	case "pma":
+		return NewPmaRepository(db)
 	}
 
 	return nil
