@@ -1,0 +1,9 @@
+{
+    "database": {
+        "host": "medicalpie.test",
+        "port": "3306",
+        "user": "mysqluser",
+        "password": "mysqlpass",
+        "name": "medicalpie"
+    }
+}

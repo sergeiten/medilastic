@@ -1,0 +1,40 @@
+hash: 867390247d12e816e910df991740863820b083272e6c2a2a39d18f5919dc0684
+updated: 2018-02-13T10:28:32.243441+09:00
+imports:
+- name: github.com/go-sql-driver/mysql
+  version: a0583e0143b1624142adab07e0e97fe106d99561
+- name: github.com/gorilla/context
+  version: 08b5f424b9271eedf6f9f0ce86cb9396ed337a42
+- name: github.com/gorilla/mux
+  version: c0091a029979286890368b4c7b301261e448e242
+- name: github.com/mailru/easyjson
+  version: 32fa128f234d041f196a9f3e0fea5ac9772c08e1
+  subpackages:
+  - buffer
+  - jlexer
+  - jwriter
+- name: github.com/mattn/go-runewidth
+  version: 97311d9f7767e3d6f422ea06661bc2c7a19e8a5d
+- name: github.com/olekukonko/tablewriter
+  version: b8a9be070da40449e501c3c4730a889e42d87a9e
+- name: github.com/olivere/elastic
+  version: f7d3c175b6850715108479852678be7f4630c17b
+  subpackages:
+  - config
+  - uritemplates
+- name: github.com/pkg/errors
+  version: f15c970de5b76fac0b59abb32d62c17cc7bed265
+- name: github.com/sirupsen/logrus
+  version: d682213848ed68c0a260ca37d6dd5ace8423f5ba
+- name: golang.org/x/crypto
+  version: 6a293f2d4b14b8e6d3f0539e383f6d0d30fce3fd
+  subpackages:
+  - ssh/terminal
+- name: golang.org/x/sys
+  version: 1e2299c37cc91a509f1b12369872d27be0ce98a6
+  subpackages:
+  - unix
+  - windows
+- name: gopkg.in/olivere/elastic.v5
+  version: 2963eb09b89294356e1a826068f33e5a44326ac0
+testImports: []

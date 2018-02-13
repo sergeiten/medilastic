@@ -1,0 +1,60 @@
+{
+    "settings": {
+        "number_of_shards": 1,
+        "number_of_replicas": 0,
+        "analysis": {
+            "analyzer": {
+                "ngram_analyzer": {
+                    "type": "custom",
+                    "tokenizer": "my_tokenizer",
+                    "filter": [
+                        "lowercase"
+                    ]
+                }
+            },
+            "tokenizer": {
+                "my_tokenizer": {
+                    "type": "ngram",
+                    "min_gram": 3,
+                    "max_gram": 3,
+                    "token_chars": [
+                        "letter",
+                        "digit"
+                    ]
+                }
+            }
+        }
+    },
+    "mappings": {
+        "fda": {
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "brand_name": {
+                    "type": "text",
+                    "analyzer": "ngram_analyzer"
+                },
+                "company_name": {
+                    "type": "text",
+                    "analyzer": "ngram_analyzer"
+                },
+                "device_description": {
+                    "type": "text"
+                },
+                "gmdn_pt_name": {
+                    "type": "text"
+                },
+                "gmdn_pt_definition": {
+                    "type": "text"
+                },
+                "product_code": {
+                    "type": "keyword"
+                },
+                "product_code_name": {
+                    "type": "text"
+                }
+            }
+        }
+    }
+}
