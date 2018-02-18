@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+docker build -t elasticsearch-medicalpie .
+
 docker network create elastic
 
 docker stop elasticsearch && docker rm elasticsearch

@@ -4,7 +4,9 @@ import (
 	"context"
 	"encoding/json"
 	"flag"
+	"fmt"
 	"net/http"
+	"os"
 	"strconv"
 	"strings"
 
@@ -19,15 +21,29 @@ var host string
 var port string
 
 func init() {
-	flag.StringVar(&host, "host", "localhost", "Host")
-	flag.StringVar(&port, "port", "8080", "Port")
+	flag.StringVar(&host, "host", "0.0.0.0", "Host")
+	flag.StringVar(&port, "port", "8888", "Port")
 	flag.Parse()
 }
 
 func main() {
+	f, err := os.OpenFile("/tmp/medilastic.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	if err != nil {
+		log.Fatalf("failed to opening log file: %v", err)
+	}
+	defer func() {
+		err = f.Close()
+		if err != nil {
+			log.WithError(err).Error("failed to close file")
+		}
+	}()
+
+	log.SetOutput(f)
+
 	router := mux.NewRouter().StrictSlash(true)
 	router.HandleFunc("/search", Search)
 
+	fmt.Printf("Starting up on %s:%s\n", host, port)
 	log.Fatal(http.ListenAndServe(host+":"+port, router))
 }
 

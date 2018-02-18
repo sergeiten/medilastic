@@ -1,0 +1,25 @@
+version: '3'
+services:
+  medilasticsearch:
+    build: 
+      context: .
+      dockerfile: ./dockers/app/Dockerfile
+    image: sergeiten/medilastic:v1
+    volumes:
+      - /tmp:/logs
+    ports:
+      - "8888:8888"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "10"
+  elasticsearch:
+    build: 
+      context: .
+      dockerfile: ./dockers/elasticsearch/Dockerfile
+    image: sergeiten/elasticsearch:v1
+    volumes: 
+      - ~/data:/usr/share/elasticsearch/data
+    # ports:
+    #   - "9200:9200"

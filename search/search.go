@@ -17,6 +17,14 @@ func NewSearch(name string, ctx context.Context, client *elastic.Client) Searche
 		return NewPermitStatusSearch(ctx, client)
 	case "fda":
 		return NewFdaSearch(ctx, client)
+	case "kimes":
+		return NewKimesSearch(ctx, client)
+	case "medica":
+		return NewMedicaSearch(ctx, client)
+	case "pas":
+		return NewPasSearch(ctx, client)
+	case "pma":
+		return NewPmaSearch(ctx, client)
 	}
 	return nil
 }
