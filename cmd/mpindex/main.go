@@ -31,14 +31,15 @@ func init() {
 func main() {
 	ctx := context.Background()
 
-	client, err := medilastic.NewClient(ctx)
-	if err != nil {
-		log.WithError(err).Fatal("failed to get elastic client")
-	}
-
 	config, err := config.New(configFile)
 	if err != nil {
 		log.WithError(err).Fatal("failed to get config")
+	}
+
+	url := fmt.Sprintf("http://%s:%s", config.Elasticsearch.Host, config.Elasticsearch.Port)
+	client, err := medilastic.NewClient(ctx, url)
+	if err != nil {
+		log.WithError(err).Fatal("failed to get elastic client")
 	}
 
 	db, err := sql.Open("mysql", fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", config.Database.User, config.Database.Password, config.Database.Host, config.Database.Port, config.Database.Name))
