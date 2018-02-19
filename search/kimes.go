@@ -33,7 +33,7 @@ func (s *kimesSearch) SetIndexName(name string) *kimesSearch {
 // Search ...
 func (s *kimesSearch) Search(query string, from int, size int) ([]map[string]string, error) {
 	searchQuery := elastic.NewBoolQuery()
-	searchQuery.Must(elastic.NewMultiMatchQuery(query, "model", "country", "manufacture", "specification", "description", "category", "subcategory").Fuzziness("AUTO").Operator("AND"))
+	searchQuery.Must(elastic.NewMultiMatchQuery(query, "model", "country", "manufacture", "specification", "description", "category", "subcategory").Fuzziness("AUTO").Operator("OR"))
 
 	searchResult, err := s.client.Search().Index(s.indexName).Query(searchQuery).From(from).Size(size).Do(s.ctx)
 	if err != nil {

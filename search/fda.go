@@ -34,7 +34,7 @@ func (s *fdaSearch) SetIndexName(name string) *fdaSearch {
 // Search ...
 func (s *fdaSearch) Search(query string, from int, size int) ([]map[string]string, error) {
 	searchQuery := elastic.NewBoolQuery()
-	searchQuery.Must(elastic.NewMultiMatchQuery(query, "brand_name", "company_name", "device_description", "gmdn_pt_name", "gmdn_pt_definition", "product_code", "product_code_name").Fuzziness("AUTO").Operator("AND"))
+	searchQuery.Must(elastic.NewMultiMatchQuery(query, "brand_name", "company_name", "device_description", "gmdn_pt_name", "gmdn_pt_definition", "product_code", "product_code_name").Fuzziness("AUTO").Operator("OR"))
 
 	searchResult, err := s.client.Search().Index(s.indexName).Query(searchQuery).From(from).Size(size).Do(s.ctx)
 	if err != nil {
