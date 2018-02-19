@@ -14,6 +14,7 @@ services:
       options:
         max-size: "200k"
         max-file: "10"
+    restart: on-failure
   elasticsearch:
     build: 
       context: .
@@ -21,5 +22,5 @@ services:
     image: sergeiten/elasticsearch:v1
     volumes: 
       - ~/data:/usr/share/elasticsearch/data
-    # ports:
-    #   - "9200:9200"
+    ports:
+      - "9200:9200"

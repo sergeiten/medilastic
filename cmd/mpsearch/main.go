@@ -3,20 +3,24 @@ package main
 import (
 	"context"
 	"flag"
+	"fmt"
 
 	"github.com/sergeiten/medilastic"
+	"github.com/sergeiten/medilastic/config"
 	"github.com/sergeiten/medilastic/print"
 	"github.com/sergeiten/medilastic/search"
 
 	log "github.com/sirupsen/logrus"
 )
 
+var configFile string
 var query string
 var indexName string
 var from int
 var size int
 
 func init() {
+	flag.StringVar(&configFile, "config", "config.json", "The file name of config file")
 	flag.StringVar(&query, "query", "", "Search Query")
 	flag.StringVar(&indexName, "index", "", "Index Name")
 	flag.IntVar(&from, "from", 0, "Start from position")
@@ -31,7 +35,14 @@ func init() {
 func main() {
 	ctx := context.Background()
 
-	client, err := medilastic.NewClient(ctx)
+	config, err := config.New(configFile)
+	if err != nil {
+		log.WithError(err).Fatal("failed to get config")
+	}
+
+	url := fmt.Sprintf("http://%s:%s", config.Elasticsearch.Host, config.Elasticsearch.Port)
+
+	client, err := medilastic.NewClient(ctx, url)
 	if err != nil {
 		log.WithError(err).Fatal("failed to get elastic client")
 	}

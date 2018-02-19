@@ -7,13 +7,13 @@ import (
 )
 
 // NewClient returns elastic client
-func NewClient(ctx context.Context) (*elastic.Client, error) {
-	client, err := elastic.NewClient(elastic.SetURL("http://elasticsearch:9200"), elastic.SetSniff(false))
+func NewClient(ctx context.Context, url string) (*elastic.Client, error) {
+	client, err := elastic.NewClient(elastic.SetURL(url), elastic.SetSniff(false))
 	if err != nil {
 		return nil, err
 	}
 
-	_, _, err = client.Ping("http://elasticsearch:9200").Do(ctx)
+	_, _, err = client.Ping(url).Do(ctx)
 	if err != nil {
 		return nil, err
 	}

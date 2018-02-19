@@ -1,9 +1,13 @@
 {
     "database": {
-        "host": "medicalpie.test",
+        "host": "localhost",
         "port": "3306",
         "user": "mysqluser",
         "password": "mysqlpass",
         "name": "medicalpie"
+    },
+    "elasticsearch": {
+        "host": "localhost",
+        "port": "9200"
     }
 }

@@ -8,11 +8,11 @@ import (
 
 type tableWriter struct {
 	headers []string
-	rows    [][]string
+	rows    map[string][]string
 }
 
 // New returns printer
-func New(headers []string, rows [][]string) Printer {
+func New(headers []string, rows map[string][]string) Printer {
 	return tableWriter{
 		headers: headers,
 		rows:    rows,
@@ -22,7 +22,7 @@ func New(headers []string, rows [][]string) Printer {
 func (t tableWriter) Print() {
 	table := tablewriter.NewWriter(os.Stdout)
 	table.SetHeader(t.headers)
-	table.AppendBulk(t.rows)
+	// table.AppendBulk(t.rows)
 
 	table.Render()
 }

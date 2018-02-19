@@ -14,6 +14,10 @@ type Config struct {
 		Password string `json:"password"`
 		Name     string `json:"name"`
 	} `json:"database"`
+	Elasticsearch struct {
+		Host string `json:"host"`
+		Port string `json:"port"`
+	} `json:"elasticsearch"`
 }
 
 // New return config struct read values from config json file

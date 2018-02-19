@@ -9,4 +9,5 @@ RUN CGO_ENABLED=0 go build -a -installsuffix cgo -o app cmd/server/main.go
 FROM alpine:latest
 WORKDIR /
 COPY --from=builder /go/src/github.com/sergeiten/medilastic/app .
+COPY --from=builder /go/src/github.com/sergeiten/medilastic/config.json .
 CMD ["/app", "-host=0.0.0.0", "-port=8888"]

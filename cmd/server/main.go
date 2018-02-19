@@ -12,6 +12,7 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/sergeiten/medilastic"
+	"github.com/sergeiten/medilastic/config"
 	"github.com/sergeiten/medilastic/search"
 
 	log "github.com/sirupsen/logrus"
@@ -19,15 +20,17 @@ import (
 
 var host string
 var port string
+var configFile string
 
 func init() {
 	flag.StringVar(&host, "host", "0.0.0.0", "Host")
 	flag.StringVar(&port, "port", "8888", "Port")
+	flag.StringVar(&configFile, "config", "config.json", "The file name of config file")
 	flag.Parse()
 }
 
 func main() {
-	f, err := os.OpenFile("/tmp/medilastic.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	f, err := os.OpenFile("/logs/medilastic.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
 		log.Fatalf("failed to opening log file: %v", err)
 	}
@@ -80,7 +83,14 @@ func Search(w http.ResponseWriter, r *http.Request) {
 
 	ctx := context.Background()
 
-	client, err := medilastic.NewClient(ctx)
+	config, err := config.New(configFile)
+	if err != nil {
+		log.WithError(err).Fatal("failed to get config")
+	}
+
+	url := fmt.Sprintf("http://%s:%s", config.Elasticsearch.Host, config.Elasticsearch.Port)
+
+	client, err := medilastic.NewClient(ctx, url)
 	if err != nil {
 		log.WithError(err).Fatal("failed to get elastic client")
 	}
