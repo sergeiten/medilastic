@@ -5,8 +5,8 @@ import (
 	"reflect"
 	"strconv"
 
+	"github.com/olivere/elastic"
 	"github.com/sergeiten/medilastic"
-	"gopkg.in/olivere/elastic.v5"
 )
 
 // pasSearch ...
@@ -33,7 +33,7 @@ func (s *pasSearch) SetIndexName(name string) *pasSearch {
 // Search ...
 func (s *pasSearch) Search(query string, from int, size int) ([]map[string]string, error) {
 	searchQuery := elastic.NewBoolQuery()
-	searchQuery.Must(elastic.NewQueryStringQuery(query).DefaultField("*").AnalyzeWildcard(true))
+	searchQuery.Must(elastic.NewMultiMatchQuery(query, "application_name", "device_name", "medical_speciality", "study_name", "study_design_description").Fuzziness("AUTO").Operator("AND"))
 
 	searchResult, err := s.client.Search().Index(s.indexName).Query(searchQuery).From(from).Size(size).Do(s.ctx)
 	if err != nil {

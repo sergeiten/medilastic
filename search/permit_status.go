@@ -5,8 +5,8 @@ import (
 	"reflect"
 	"strconv"
 
+	"github.com/olivere/elastic"
 	"github.com/sergeiten/medilastic"
-	"gopkg.in/olivere/elastic.v5"
 )
 
 // PermitStatusSearch ...

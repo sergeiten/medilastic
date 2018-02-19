@@ -3,7 +3,7 @@ package medilastic
 import (
 	"context"
 
-	"gopkg.in/olivere/elastic.v5"
+	"github.com/olivere/elastic"
 )
 
 // NewClient returns elastic client

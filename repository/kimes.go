@@ -23,7 +23,7 @@ func NewKimesRepository(db *sql.DB) Repository {
 func (r KimesRepository) Get() (map[int]string, error) {
 	rows, err := r.DB.Query(`
 SELECT id, model, country, manufacture, specification, description, category, subcategory
-FROM kimes_products`)
+FROM kimes_products ORDER BY id`)
 	if err != nil {
 		return nil, err
 	}

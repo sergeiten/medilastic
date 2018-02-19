@@ -1,6 +1,7 @@
 package print
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/olekukonko/tablewriter"
@@ -8,11 +9,11 @@ import (
 
 type tableWriter struct {
 	headers []string
-	rows    map[string][]string
+	rows    []map[string]string
 }
 
 // New returns printer
-func New(headers []string, rows map[string][]string) Printer {
+func New(headers []string, rows []map[string]string) Printer {
 	return tableWriter{
 		headers: headers,
 		rows:    rows,
@@ -20,9 +21,15 @@ func New(headers []string, rows map[string][]string) Printer {
 }
 
 func (t tableWriter) Print() {
+	var rows [][]string
+	for _, r := range t.rows {
+		fmt.Printf("%+v", r)
+		// t := t.ttype
+		// rows = append(rows, r)
+	}
 	table := tablewriter.NewWriter(os.Stdout)
 	table.SetHeader(t.headers)
-	// table.AppendBulk(t.rows)
+	table.AppendBulk(rows)
 
 	table.Render()
 }

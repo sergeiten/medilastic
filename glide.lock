@@ -1,5 +1,5 @@
-hash: 867390247d12e816e910df991740863820b083272e6c2a2a39d18f5919dc0684
-updated: 2018-02-13T10:28:32.243441+09:00
+hash: 4d2fdb790a8a524fd928d4bcf2f8dd37dbb498903e95f1402d6c7913566230b3
+updated: 2018-02-19T18:36:55.53408+09:00
 imports:
 - name: github.com/go-sql-driver/mysql
   version: a0583e0143b1624142adab07e0e97fe106d99561
@@ -18,7 +18,7 @@ imports:
 - name: github.com/olekukonko/tablewriter
   version: b8a9be070da40449e501c3c4730a889e42d87a9e
 - name: github.com/olivere/elastic
-  version: f7d3c175b6850715108479852678be7f4630c17b
+  version: 2982cec1ae1eb496c4e6ec43b4136bedb977fec7
   subpackages:
   - config
   - uritemplates
@@ -35,6 +35,4 @@ imports:
   subpackages:
   - unix
   - windows
-- name: gopkg.in/olivere/elastic.v5
-  version: 2963eb09b89294356e1a826068f33e5a44326ac0
 testImports: []

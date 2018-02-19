@@ -4,9 +4,9 @@ import (
 	"context"
 	"strconv"
 
+	"github.com/olivere/elastic"
 	"github.com/sergeiten/medilastic/repository"
 	log "github.com/sirupsen/logrus"
-	"gopkg.in/olivere/elastic.v5"
 )
 
 // Indexer ...

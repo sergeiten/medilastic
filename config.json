@@ -7,7 +7,7 @@
         "name": "medicalpie"
     },
     "elasticsearch": {
-        "host": "localhost",
+        "host": "elasticsearch",
         "port": "9200"
     }
 }

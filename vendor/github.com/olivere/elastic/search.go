@@ -110,9 +110,15 @@ func (s *SearchService) TimeoutInMillis(timeoutInMillis int) *SearchService {
 	return s
 }
 
+// TerminateAfter specifies the maximum number of documents to collect for
+// each shard, upon reaching which the query execution will terminate early.
+func (s *SearchService) TerminateAfter(terminateAfter int) *SearchService {
+	s.searchSource = s.searchSource.TerminateAfter(terminateAfter)
+	return s
+}
+
 // SearchType sets the search operation type. Valid values are:
-// "query_then_fetch", "query_and_fetch", "dfs_query_then_fetch",
-// "dfs_query_and_fetch", "count", "scan".
+// "dfs_query_then_fetch" and "query_then_fetch".
 // See https://www.elastic.co/guide/en/elasticsearch/reference/6.0/search-request-search-type.html
 // for details.
 func (s *SearchService) SearchType(searchType string) *SearchService {
@@ -265,6 +271,13 @@ func (s *SearchService) StoredField(fieldName string) *SearchService {
 // If none are specified, the source of the document will be returned.
 func (s *SearchService) StoredFields(fields ...string) *SearchService {
 	s.searchSource = s.searchSource.StoredFields(fields...)
+	return s
+}
+
+// TrackScores is applied when sorting and controls if scores will be
+// tracked as well. Defaults to false.
+func (s *SearchService) TrackScores(trackScores bool) *SearchService {
+	s.searchSource = s.searchSource.TrackScores(trackScores)
 	return s
 }
 
@@ -427,7 +440,8 @@ func (r *SearchResult) TotalHits() int64 {
 
 // Each is a utility function to iterate over all hits. It saves you from
 // checking for nil values. Notice that Each will ignore errors in
-// serializing JSON.
+// serializing JSON and hits with empty/nil _source will get an empty
+// value
 func (r *SearchResult) Each(typ reflect.Type) []interface{} {
 	if r.Hits == nil || r.Hits.Hits == nil || len(r.Hits.Hits) == 0 {
 		return nil
@@ -435,6 +449,10 @@ func (r *SearchResult) Each(typ reflect.Type) []interface{} {
 	var slice []interface{}
 	for _, hit := range r.Hits.Hits {
 		v := reflect.New(typ).Elem()
+		if hit.Source == nil {
+			slice = append(slice, v.Interface())
+			continue
+		}
 		if err := json.Unmarshal(*hit.Source, v.Addr().Interface()); err == nil {
 			slice = append(slice, v.Interface())
 		}

@@ -3,7 +3,7 @@ package search
 import (
 	"context"
 
-	"gopkg.in/olivere/elastic.v5"
+	"github.com/olivere/elastic"
 )
 
 // Searcher ...

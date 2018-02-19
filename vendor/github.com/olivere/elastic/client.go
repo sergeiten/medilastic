@@ -26,7 +26,7 @@ import (
 
 const (
 	// Version is the current version of Elastic.
-	Version = "6.0.0"
+	Version = "6.1.8"
 
 	// DefaultURL is the default endpoint of Elasticsearch on the local machine.
 	// It is used e.g. when initializing a new Client without a specific URL.
@@ -75,9 +75,6 @@ const (
 	// DefaultSendGetBodyAs is the HTTP method to use when elastic is sending
 	// a GET request with a body.
 	DefaultSendGetBodyAs = "GET"
-
-	// DefaultGzipEnabled specifies if gzip compression is enabled by default.
-	DefaultGzipEnabled = false
 
 	// off is used to disable timeouts.
 	off = -1 * time.Second
@@ -135,7 +132,6 @@ type Client struct {
 	basicAuthPassword         string          // password for HTTP Basic Auth
 	sendGetBodyAs             string          // override for when sending a GET with a body
 	requiredPlugins           []string        // list of required plugins
-	gzipEnabled               bool            // gzip compression enabled or disabled (default)
 	retrier                   Retrier         // strategy for retries
 }
 
@@ -209,7 +205,6 @@ func NewClient(options ...ClientOptionFunc) (*Client, error) {
 		snifferCallback:           nopSnifferCallback,
 		snifferStop:               make(chan bool),
 		sendGetBodyAs:             DefaultSendGetBodyAs,
-		gzipEnabled:               DefaultGzipEnabled,
 		retrier:                   noRetries, // no retries by default
 	}
 
@@ -367,7 +362,6 @@ func NewSimpleClient(options ...ClientOptionFunc) (*Client, error) {
 		snifferCallback:           nopSnifferCallback,
 		snifferStop:               make(chan bool),
 		sendGetBodyAs:             DefaultSendGetBodyAs,
-		gzipEnabled:               DefaultGzipEnabled,
 		retrier:                   noRetries, // no retries by default
 	}
 
@@ -592,14 +586,6 @@ func SetMaxRetries(maxRetries int) ClientOptionFunc {
 			backoff := NewSimpleBackoff(ticks...)
 			c.retrier = NewBackoffRetrier(backoff)
 		}
-		return nil
-	}
-}
-
-// SetGzip enables or disables gzip compression (disabled by default).
-func SetGzip(enabled bool) ClientOptionFunc {
-	return func(c *Client) error {
-		c.gzipEnabled = enabled
 		return nil
 	}
 }
@@ -1086,6 +1072,7 @@ func (c *Client) startupHealthcheck(timeout time.Duration) error {
 	c.mu.Unlock()
 
 	// If we don't get a connection after "timeout", we bail.
+	var lastErr error
 	start := time.Now()
 	for {
 		// Make a copy of the HTTP client provided via options to respect
@@ -1104,12 +1091,17 @@ func (c *Client) startupHealthcheck(timeout time.Duration) error {
 			res, err := cl.Do(req)
 			if err == nil && res != nil && res.StatusCode >= 200 && res.StatusCode < 300 {
 				return nil
+			} else if err != nil {
+				lastErr = err
 			}
 		}
 		time.Sleep(1 * time.Second)
 		if time.Now().Sub(start) > timeout {
 			break
 		}
+	}
+	if lastErr != nil {
+		return errors.Wrapf(ErrNoClient, "health check timeout: %v", lastErr)
 	}
 	return errors.Wrap(ErrNoClient, "health check timeout")
 }
@@ -1177,6 +1169,7 @@ type PerformRequestOptions struct {
 	Body         interface{}
 	ContentType  string
 	IgnoreErrors []int
+	Retrier      Retrier
 }
 
 // PerformRequest does a HTTP request to Elasticsearch.
@@ -1194,7 +1187,10 @@ func (c *Client) PerformRequest(ctx context.Context, opt PerformRequestOptions) 
 	basicAuthUsername := c.basicAuthUsername
 	basicAuthPassword := c.basicAuthPassword
 	sendGetBodyAs := c.sendGetBodyAs
-	gzipEnabled := c.gzipEnabled
+	retrier := c.retrier
+	if opt.Retrier != nil {
+		retrier = opt.Retrier
+	}
 	c.mu.RUnlock()
 
 	var err error
@@ -1223,7 +1219,7 @@ func (c *Client) PerformRequest(ctx context.Context, opt PerformRequestOptions) 
 				// Force a healtcheck as all connections seem to be dead.
 				c.healthcheck(timeout, false)
 			}
-			wait, ok, rerr := c.retrier.Retry(ctx, n, nil, nil, err)
+			wait, ok, rerr := retrier.Retry(ctx, n, nil, nil, err)
 			if rerr != nil {
 				return nil, rerr
 			}
@@ -1254,7 +1250,7 @@ func (c *Client) PerformRequest(ctx context.Context, opt PerformRequestOptions) 
 
 		// Set body
 		if opt.Body != nil {
-			err = req.SetBody(opt.Body, gzipEnabled)
+			err = req.SetBody(opt.Body)
 			if err != nil {
 				c.errorf("elastic: couldn't set body %+v for request: %v", opt.Body, err)
 				return nil, err
@@ -1279,7 +1275,7 @@ func (c *Client) PerformRequest(ctx context.Context, opt PerformRequestOptions) 
 		}
 		if err != nil {
 			n++
-			wait, ok, rerr := c.retrier.Retry(ctx, n, (*http.Request)(req), res, err)
+			wait, ok, rerr := retrier.Retry(ctx, n, (*http.Request)(req), res, err)
 			if rerr != nil {
 				c.errorf("elastic: %s is dead", conn.URL())
 				conn.MarkAsDead()
@@ -1436,9 +1432,9 @@ func (c *Client) Explain(index, typ, id string) *ExplainService {
 // TODO Search Exists API
 // TODO Validate API
 
-// FieldStats returns statistical information about fields in indices.
-func (c *Client) FieldStats(indices ...string) *FieldStatsService {
-	return NewFieldStatsService(c).Index(indices...)
+// FieldCaps returns statistical information about fields in indices.
+func (c *Client) FieldCaps(indices ...string) *FieldCapsService {
+	return NewFieldCapsService(c).Index(indices...)
 }
 
 // Exists checks if a document exists.
@@ -1520,6 +1516,11 @@ func (c *Client) IndexGetSettings(indices ...string) *IndicesGetSettingsService 
 // IndexPutSettings sets settings for all, one or more indices.
 func (c *Client) IndexPutSettings(indices ...string) *IndicesPutSettingsService {
 	return NewIndicesPutSettingsService(c).Index(indices...)
+}
+
+// IndexSegments retrieves low level segment information for all, one or more indices.
+func (c *Client) IndexSegments(indices ...string) *IndicesSegmentsService {
+	return NewIndicesSegmentsService(c).Index(indices...)
 }
 
 // IndexAnalyze performs the analysis process on a text and returns the
@@ -1776,10 +1777,4 @@ func (c *Client) WaitForGreenStatus(timeout string) error {
 // See WaitForStatus for more details.
 func (c *Client) WaitForYellowStatus(timeout string) error {
 	return c.WaitForStatus("yellow", timeout)
-}
-
-// IsConnError unwraps the given error value and checks if it is equal to
-// elastic.ErrNoClient.
-func IsConnErr(err error) bool {
-	return errors.Cause(err) == ErrNoClient
 }

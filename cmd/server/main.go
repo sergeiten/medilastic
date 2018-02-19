@@ -75,7 +75,7 @@ func Search(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if r.FormValue("size") != "" {
-		from, err = strconv.Atoi(r.FormValue("size"))
+		size, err = strconv.Atoi(r.FormValue("size"))
 		if err != nil {
 			log.WithError(err).Fatal("failed to parse size value")
 		}
@@ -102,6 +102,9 @@ func Search(w http.ResponseWriter, r *http.Request) {
 	for _, index := range indexes {
 		search := search.NewSearch(index, ctx, client)
 		result[index], err = search.Search(query, from, size)
+		if err != nil {
+			log.WithError(err).Error("failed to get search result")
+		}
 	}
 
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")

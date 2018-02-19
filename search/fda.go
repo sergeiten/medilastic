@@ -2,11 +2,12 @@ package search
 
 import (
 	"context"
+	"log"
 	"reflect"
 	"strconv"
 
+	"github.com/olivere/elastic"
 	"github.com/sergeiten/medilastic"
-	"gopkg.in/olivere/elastic.v5"
 )
 
 // FdaSearch ...
@@ -33,12 +34,15 @@ func (s *fdaSearch) SetIndexName(name string) *fdaSearch {
 // Search ...
 func (s *fdaSearch) Search(query string, from int, size int) ([]map[string]string, error) {
 	searchQuery := elastic.NewBoolQuery()
-	searchQuery.Must(elastic.NewQueryStringQuery(query).DefaultField("*").AnalyzeWildcard(true))
+	searchQuery.Must(elastic.NewMultiMatchQuery(query, "brand_name", "company_name", "device_description", "gmdn_pt_name", "gmdn_pt_definition", "product_code", "product_code_name").Fuzziness("AUTO").Operator("AND"))
 
 	searchResult, err := s.client.Search().Index(s.indexName).Query(searchQuery).From(from).Size(size).Do(s.ctx)
 	if err != nil {
 		return nil, err
 	}
+
+	source, _ := searchQuery.Source()
+	log.Printf("%+v", source)
 
 	var result []map[string]string
 

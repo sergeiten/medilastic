@@ -22,7 +22,7 @@ Here's the version matrix:
 
 Elasticsearch version | Elastic version  | Package URL | Remarks |
 ----------------------|------------------|-------------|---------|
-6.x                   | 6.0              | [`github.com/olivere/elastic`](github.com/olivere/elastic) ([source](https://github.com/olivere/elastic/tree/release-branch.v6) [doc](http://godoc.org/github.com/olivere/elastic)) | Use a dependency manager (see below).
+6.x                   | 6.0              | [`github.com/olivere/elastic`](https://github.com/olivere/elastic) ([source](https://github.com/olivere/elastic/tree/release-branch.v6) [doc](http://godoc.org/github.com/olivere/elastic)) | Use a dependency manager (see below).
 5.x                   | 5.0              | [`gopkg.in/olivere/elastic.v5`](https://gopkg.in/olivere/elastic.v5) ([source](https://github.com/olivere/elastic/tree/release-branch.v5) [doc](http://godoc.org/gopkg.in/olivere/elastic.v5)) | Actively maintained.
 2.x                   | 3.0              | [`gopkg.in/olivere/elastic.v3`](https://gopkg.in/olivere/elastic.v3) ([source](https://github.com/olivere/elastic/tree/release-branch.v3) [doc](http://godoc.org/gopkg.in/olivere/elastic.v3)) | Deprecated. Please update.
 1.x                   | 2.0              | [`gopkg.in/olivere/elastic.v2`](https://gopkg.in/olivere/elastic.v2) ([source](https://github.com/olivere/elastic/tree/release-branch.v2) [doc](http://godoc.org/gopkg.in/olivere/elastic.v2)) | Deprecated. Please update.
@@ -48,10 +48,7 @@ import "github.com/olivere/elastic"
 
 ### Elastic 6.0
 
-Elastic 6.0 targets Elasticsearch 6.0.0 and later. Elasticsearch 6.0.0 isn't released
-yet, but we have
-[6.0.0-rc2](https://www.elastic.co/downloads/elasticsearch#preview-release)
-at the time of writing this ([docs and breaking changes](https://www.elastic.co/guide/en/elasticsearch/reference/6.0/release-notes-6.0.0-rc2.html)).
+Elastic 6.0 targets Elasticsearch 6.x which was [released on 14th November 2017](https://www.elastic.co/blog/elasticsearch-6-0-0-released).
 
 Notice that there are will be a lot of [breaking changes in Elasticsearch 6.0](https://www.elastic.co/guide/en/elasticsearch/reference/6.0/breaking-changes-6.0.html)
 and we used this as an opportunity to [clean up and refactor Elastic](https://github.com/olivere/elastic/blob/release-branch.v6/CHANGELOG-6.0.md)
@@ -159,11 +156,10 @@ See the [wiki](https://github.com/olivere/elastic/wiki) for more details.
   - [x] Context Suggester
 - [x] Multi Search API
 - [x] Count API
-- [ ] Search Exists API
 - [ ] Validate API
 - [x] Explain API
 - [x] Profile API
-- [x] Field Stats API
+- [x] Field Capabilities API
 
 ### Aggregations
 
@@ -183,9 +179,11 @@ See the [wiki](https://github.com/olivere/elastic/wiki) for more details.
   - [x] Top Hits
   - [x] Value Count
 - Bucket Aggregations
+  - [ ] Adjacency Matrix
   - [x] Children
   - [x] Date Histogram
   - [x] Date Range
+  - [ ] Diversified Sampler
   - [x] Filter
   - [x] Filters
   - [x] Geo Distance
@@ -199,7 +197,9 @@ See the [wiki](https://github.com/olivere/elastic/wiki) for more details.
   - [x] Reverse Nested
   - [x] Sampler
   - [x] Significant Terms
+  - [x] Significant Text
   - [x] Terms
+  - [x] Composite
 - Pipeline Aggregations
   - [x] Avg Bucket
   - [x] Derivative
@@ -213,6 +213,7 @@ See the [wiki](https://github.com/olivere/elastic/wiki) for more details.
   - [x] Cumulative Sum
   - [x] Bucket Script
   - [x] Bucket Selector
+  - [ ] Bucket Sort
   - [x] Serial Differencing
 - [x] Matrix Aggregations
   - [x] Matrix Stats
@@ -235,17 +236,17 @@ See the [wiki](https://github.com/olivere/elastic/wiki) for more details.
 - [x] Update Indices Settings
 - [x] Get Settings
 - [x] Analyze
+  - [x] Explain Analyze
 - [x] Index Templates
-- [ ] Shadow Replica Indices
 - [x] Indices Stats
-- [ ] Indices Segments
+- [x] Indices Segments
 - [ ] Indices Recovery
 - [ ] Indices Shard Stores
 - [ ] Clear Cache
 - [x] Flush
+  - [x] Synced Flush
 - [x] Refresh
 - [x] Force Merge
-- [ ] Upgrade
 
 ### cat APIs
 
@@ -268,6 +269,7 @@ The cat APIs are not implemented as of now. We think they are better suited for 
 - [ ] cat shards
 - [ ] cat segments
 - [ ] cat snapshots
+- [ ] cat templates
 
 ### Cluster APIs
 
@@ -279,6 +281,8 @@ The cat APIs are not implemented as of now. We think they are better suited for 
 - [ ] Cluster Update Settings
 - [x] Nodes Stats
 - [x] Nodes Info
+- [ ] Nodes Feature Usage
+- [ ] Remote Cluster Info
 - [x] Task Management API
 - [ ] Nodes hot_threads
 - [ ] Cluster Allocation Explain API
@@ -298,6 +302,7 @@ The cat APIs are not implemented as of now. We think they are better suited for 
 - Term level queries
   - [x] Term Query
   - [x] Terms Query
+  - [x] Terms Set Query
   - [x] Range Query
   - [x] Exists Query
   - [x] Prefix Query
@@ -312,7 +317,6 @@ The cat APIs are not implemented as of now. We think they are better suited for 
   - [x] Dis Max Query
   - [x] Function Score Query
   - [x] Boosting Query
-  - [x] Indices Query
 - Joining queries
   - [x] Nested Query
   - [x] Has Child Query
@@ -322,12 +326,9 @@ The cat APIs are not implemented as of now. We think they are better suited for 
   - [ ] GeoShape Query
   - [x] Geo Bounding Box Query
   - [x] Geo Distance Query
-  - [ ] Geo Distance Range Query
   - [x] Geo Polygon Query
-  - [ ] Geohash Cell Query
 - Specialized queries
   - [x] More Like This Query
-  - [x] Template Query
   - [x] Script Query
   - [x] Percolate Query
 - Span queries
@@ -347,7 +348,7 @@ The cat APIs are not implemented as of now. We think they are better suited for 
 
 - Snapshot and Restore
   - [x] Repositories
-  - [ ] Snapshot
+  - [x] Snapshot
   - [ ] Restore
   - [ ] Snapshot status
   - [ ] Monitoring snapshot/restore status
