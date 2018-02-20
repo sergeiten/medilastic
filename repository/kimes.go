@@ -22,7 +22,7 @@ func NewKimesRepository(db *sql.DB) Repository {
 // Get return
 func (r KimesRepository) Get() (map[int]string, error) {
 	rows, err := r.DB.Query(`
-SELECT id, model, country, manufacture, specification, description, category, subcategory
+SELECT id, name, model, country, manufacture, specification, description, category, subcategory
 FROM kimes_products ORDER BY id`)
 	if err != nil {
 		return nil, err
@@ -35,7 +35,7 @@ FROM kimes_products ORDER BY id`)
 	for rows.Next() {
 		item := medilastic.Kimes{}
 
-		err := rows.Scan(&item.ID, &item.Model, &item.Country, &item.Manufacture, &item.Specification, &item.Description, &item.Category, &item.Subcategory)
+		err := rows.Scan(&item.ID, &item.Name, &item.Model, &item.Country, &item.Manufacture, &item.Specification, &item.Description, &item.Category, &item.Subcategory)
 		if err != nil {
 			log.WithError(err).Error("failed to scan rows")
 		}

@@ -2,7 +2,6 @@ package search
 
 import (
 	"context"
-	"log"
 	"reflect"
 	"strconv"
 
@@ -40,9 +39,6 @@ func (s *fdaSearch) Search(query string, from int, size int) ([]map[string]strin
 	if err != nil {
 		return nil, err
 	}
-
-	source, _ := searchQuery.Source()
-	log.Printf("%+v", source)
 
 	var result []map[string]string
 

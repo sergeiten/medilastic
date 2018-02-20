@@ -14,7 +14,7 @@ type FDARepository struct {
 	DB *sql.DB
 }
 
-// NewPermitStatusRepository returns permit status repository
+// NewFDARepository returns fda repository
 func NewFDARepository(db *sql.DB) Repository {
 	return FDARepository{DB: db}
 }

@@ -31,6 +31,10 @@
                 "id": {
                     "type": "integer"
                 },
+                "name": {
+                    "type": "text",
+                    "analyzer": "ngram_analyzer"
+                },
                 "model": {
                     "type": "text",
                     "analyzer": "ngram_analyzer"

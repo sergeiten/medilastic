@@ -26,6 +26,7 @@ type Fda struct {
 // Kimes ...
 type Kimes struct {
 	ID            int    `json:"id"`
+	Name          string `json:"name"`
 	Model         string `json:"model"`
 	Country       string `json:"country"`
 	Manufacture   string `json:"manufacture"`
