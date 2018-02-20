@@ -11,7 +11,8 @@ type Searcher interface {
 	Search(query string, from int, size int) ([]map[string]string, error)
 }
 
-func NewSearch(name string, ctx context.Context, client *elastic.Client) Searcher {
+// NewSearch returns searcher interface for specific type
+func NewSearch(ctx context.Context, name string, client *elastic.Client) Searcher {
 	switch name {
 	case "permit_status":
 		return NewPermitStatusSearch(ctx, client)
