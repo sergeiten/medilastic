@@ -33,7 +33,7 @@ func (s *pmaSearch) SetIndexName(name string) *pmaSearch {
 // Search ...
 func (s *pmaSearch) Search(query string, from int, size int) ([]map[string]string, error) {
 	searchQuery := elastic.NewBoolQuery()
-	searchQuery.Must(elastic.NewMultiMatchQuery(query, "applicant", "generic_name", "trade_name").Fuzziness("AUTO").Operator("OR"))
+	searchQuery.Must(elastic.NewMultiMatchQuery(query, "applicant", "generic_name", "trade_name").Operator("OR"))
 
 	searchResult, err := s.client.Search().Index(s.indexName).Query(searchQuery).From(from).Size(size).Do(s.ctx)
 	if err != nil {

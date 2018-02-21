@@ -33,7 +33,7 @@ func (s *pasSearch) SetIndexName(name string) *pasSearch {
 // Search ...
 func (s *pasSearch) Search(query string, from int, size int) ([]map[string]string, error) {
 	searchQuery := elastic.NewBoolQuery()
-	searchQuery.Must(elastic.NewMultiMatchQuery(query, "application_name", "device_name", "medical_speciality", "study_name", "study_design_description").Fuzziness("AUTO").Operator("OR"))
+	searchQuery.Must(elastic.NewMultiMatchQuery(query, "application_name", "device_name", "medical_speciality", "study_name", "study_design_description").Operator("OR"))
 
 	searchResult, err := s.client.Search().Index(s.indexName).Query(searchQuery).From(from).Size(size).Do(s.ctx)
 	if err != nil {
