@@ -47,7 +47,7 @@ func main() {
 		log.WithError(err).Fatal("failed to get elastic client")
 	}
 
-	search := search.NewSearch(indexName, ctx, client)
+	search := search.NewSearch(ctx, indexName, client)
 
 	result, err := search.Search(query, from, size)
 	if err != nil {

@@ -2,11 +2,9 @@ package search
 
 import (
 	"context"
-	"reflect"
-	"strconv"
+	"log"
 
 	"github.com/olivere/elastic"
-	"github.com/sergeiten/medilastic"
 )
 
 // PermitStatusSearch ...
@@ -31,7 +29,7 @@ func (s *permitStatusSearch) SetIndexName(name string) *permitStatusSearch {
 }
 
 // Search ...
-func (s *permitStatusSearch) Search(query string, from int, size int) ([]map[string]string, error) {
+func (s *permitStatusSearch) Search(query string, from int, size int) ([]map[string]interface{}, error) {
 	searchQuery := elastic.NewBoolQuery()
 	searchQuery.Must(elastic.NewQueryStringQuery(query).DefaultField("*").AnalyzeWildcard(true))
 
@@ -40,7 +38,7 @@ func (s *permitStatusSearch) Search(query string, from int, size int) ([]map[str
 		return nil, err
 	}
 
-	var result []map[string]string
+	// var result []map[string]string
 
 	// ID             int    `json:"id"`
 	// Product        string `json:"product"`
@@ -49,21 +47,26 @@ func (s *permitStatusSearch) Search(query string, from int, size int) ([]map[str
 	// MeaClassNo     string `json:"mea_class_no"`
 	// TypeName       string `json:"type_name"`
 	// UsePurps       string `json:"use_purps"`
-	var ttyp medilastic.PermitStatus
-	for _, item := range searchResult.Each(reflect.TypeOf(ttyp)) {
-		t := item.(medilastic.PermitStatus)
+	// var ttyp medilastic.PermitStatus
+	// for _, item := range searchResult.Each(reflect.TypeOf(ttyp)) {
+	// 	t := item.(medilastic.PermitStatus)
 
-		d := map[string]string{
-			"id":               strconv.Itoa(t.ID),
-			"product":          t.Prduct,
-			"entrps":           t.Entrps,
-			"prduct_prmisn_no": t.PrductPrmisnNo,
-			"mea_class_no":     t.MeaClassNo,
-			"type_name":        t.TypeName,
-			"use_purps":        t.UsePurps,
-		}
+	// 	d := map[string]string{
+	// 		"id":               strconv.Itoa(t.ID),
+	// 		"product":          t.Prduct,
+	// 		"entrps":           t.Entrps,
+	// 		"prduct_prmisn_no": t.PrductPrmisnNo,
+	// 		"mea_class_no":     t.MeaClassNo,
+	// 		"type_name":        t.TypeName,
+	// 		"use_purps":        t.UsePurps,
+	// 	}
 
-		result = append(result, d)
+	// 	result = append(result, d)
+	// }
+
+	result, err := hitsResult(searchResult)
+	if err != nil {
+		log.Printf("failed to convert hits to result: %v", err)
 	}
 
 	return result, nil

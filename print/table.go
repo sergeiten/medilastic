@@ -9,11 +9,11 @@ import (
 
 type tableWriter struct {
 	headers []string
-	rows    []map[string]string
+	rows    []map[string]interface{}
 }
 
 // New returns printer
-func New(headers []string, rows []map[string]string) Printer {
+func New(headers []string, rows []map[string]interface{}) Printer {
 	return tableWriter{
 		headers: headers,
 		rows:    rows,

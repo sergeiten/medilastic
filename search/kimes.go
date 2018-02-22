@@ -2,11 +2,9 @@ package search
 
 import (
 	"context"
-	"reflect"
-	"strconv"
+	"log"
 
 	"github.com/olivere/elastic"
-	"github.com/sergeiten/medilastic"
 )
 
 // kimesSearch ...
@@ -31,36 +29,22 @@ func (s *kimesSearch) SetIndexName(name string) *kimesSearch {
 }
 
 // Search ...
-func (s *kimesSearch) Search(query string, from int, size int) ([]map[string]string, error) {
-	searchQuery := elastic.NewBoolQuery()
-	searchQuery.Must(elastic.NewMultiMatchQuery(query, "model", "country", "manufacture", "specification", "description", "category", "subcategory").Operator("OR"))
+func (s *kimesSearch) Search(query string, from int, size int) ([]map[string]interface{}, error) {
+	fields := []string{
+		"model", "country", "manufacture", "specification", "description", "category", "subcategory",
+	}
 
-	// all := elastic.NewHighlighterField("_all").
-	// highlightQuery := elastic.NewHighlight().NumOfFragments(3).Fields()
+	searchQuery := searchQueryBuilder(query, fields)
+	highlight := highlightBuilder()
 
-	searchResult, err := s.client.Search().Index(s.indexName).Query(searchQuery).From(from).Size(size).Do(s.ctx)
+	searchResult, err := s.client.Search().Index(s.indexName).Query(searchQuery).Highlight(highlight).From(from).Size(size).Do(s.ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	var result []map[string]string
-
-	var ttyp medilastic.Kimes
-	for _, item := range searchResult.Each(reflect.TypeOf(ttyp)) {
-		t := item.(medilastic.Kimes)
-
-		d := map[string]string{
-			"id":            strconv.Itoa(t.ID),
-			"model":         t.Model,
-			"country":       t.Country,
-			"manufacture":   t.Manufacture,
-			"specification": t.Specification,
-			"description":   t.Description,
-			"category":      t.Category,
-			"subcategory":   t.Subcategory,
-		}
-
-		result = append(result, d)
+	result, err := hitsResult(searchResult)
+	if err != nil {
+		log.Printf("failed to convert hits to result: %v", err)
 	}
 
 	return result, nil

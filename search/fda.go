@@ -2,11 +2,9 @@ package search
 
 import (
 	"context"
-	"reflect"
-	"strconv"
+	"log"
 
 	"github.com/olivere/elastic"
-	"github.com/sergeiten/medilastic"
 )
 
 // FdaSearch ...
@@ -31,33 +29,28 @@ func (s *fdaSearch) SetIndexName(name string) *fdaSearch {
 }
 
 // Search ...
-func (s *fdaSearch) Search(query string, from int, size int) ([]map[string]string, error) {
-	searchQuery := elastic.NewBoolQuery()
-	searchQuery.Must(elastic.NewMultiMatchQuery(query, "brand_name", "company_name", "device_description", "gmdn_pt_name", "gmdn_pt_definition", "product_code", "product_code_name").Operator("OR"))
+func (s *fdaSearch) Search(query string, from int, size int) ([]map[string]interface{}, error) {
+	fields := []string{
+		"brand_name",
+		"company_name",
+		"device_description",
+		"gmdn_pt_name",
+		"gmdn_pt_definition",
+		"product_code",
+		"product_code_name",
+	}
 
-	searchResult, err := s.client.Search().Index(s.indexName).Query(searchQuery).From(from).Size(size).Do(s.ctx)
+	searchQuery := searchQueryBuilder(query, fields)
+	highlight := highlightBuilder()
+
+	searchResult, err := s.client.Search().Index(s.indexName).Query(searchQuery).Highlight(highlight).From(from).Size(size).Do(s.ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	var result []map[string]string
-
-	var ttyp medilastic.Fda
-	for _, item := range searchResult.Each(reflect.TypeOf(ttyp)) {
-		t := item.(medilastic.Fda)
-
-		d := map[string]string{
-			"id":                 strconv.Itoa(t.ID),
-			"brand_name":         t.BrandName,
-			"company_name":       t.CompanyName,
-			"device_description": t.DeviceDescription,
-			"gmdn_pt_name":       t.GmdnPtName,
-			"gmdn_pt_definition": t.GmdnPtDefinition,
-			"product_code":       t.ProductCode,
-			"product_code_name":  t.ProductCodeName,
-		}
-
-		result = append(result, d)
+	result, err := hitsResult(searchResult)
+	if err != nil {
+		log.Printf("failed to convert hits to result: %v", err)
 	}
 
 	return result, nil

@@ -84,7 +84,7 @@ func searchRequest(w http.ResponseWriter, r *http.Request) {
 
 	indexes := strings.Split(r.FormValue("index_names"), ",")
 
-	result := make(map[string][]map[string]string)
+	result := make(map[string][]map[string]interface{})
 
 	for _, index := range indexes {
 		search := search.NewSearch(ctx, index, client)

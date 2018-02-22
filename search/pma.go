@@ -2,11 +2,9 @@ package search
 
 import (
 	"context"
-	"reflect"
-	"strconv"
+	"log"
 
 	"github.com/olivere/elastic"
-	"github.com/sergeiten/medilastic"
 )
 
 // pmaSearch ...
@@ -31,29 +29,22 @@ func (s *pmaSearch) SetIndexName(name string) *pmaSearch {
 }
 
 // Search ...
-func (s *pmaSearch) Search(query string, from int, size int) ([]map[string]string, error) {
-	searchQuery := elastic.NewBoolQuery()
-	searchQuery.Must(elastic.NewMultiMatchQuery(query, "applicant", "generic_name", "trade_name").Operator("OR"))
+func (s *pmaSearch) Search(query string, from int, size int) ([]map[string]interface{}, error) {
+	fields := []string{
+		"applicant", "generic_name", "trade_name",
+	}
 
-	searchResult, err := s.client.Search().Index(s.indexName).Query(searchQuery).From(from).Size(size).Do(s.ctx)
+	searchQuery := searchQueryBuilder(query, fields)
+	highlight := highlightBuilder()
+
+	searchResult, err := s.client.Search().Index(s.indexName).Query(searchQuery).Highlight(highlight).From(from).Size(size).Do(s.ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	var result []map[string]string
-
-	var ttyp medilastic.Pma
-	for _, item := range searchResult.Each(reflect.TypeOf(ttyp)) {
-		t := item.(medilastic.Pma)
-
-		d := map[string]string{
-			"id":           strconv.Itoa(t.ID),
-			"applicant":    t.Applicant,
-			"generic_name": t.GenericName,
-			"trade_name":   t.TradeName,
-		}
-
-		result = append(result, d)
+	result, err := hitsResult(searchResult)
+	if err != nil {
+		log.Printf("failed to convert hits to result: %v", err)
 	}
 
 	return result, nil

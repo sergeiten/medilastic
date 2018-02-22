@@ -30,9 +30,6 @@ func New(file string) (Config, error) {
 	}
 
 	err = json.Unmarshal(dat, &c)
-	if err != nil {
-		return c, err
-	}
 
-	return c, nil
+	return c, err
 }
