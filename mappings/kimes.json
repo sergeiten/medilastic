@@ -32,12 +32,10 @@
                     "type": "integer"
                 },
                 "name": {
-                    "type": "text",
-                    "analyzer": "ngram_analyzer"
+                    "type": "text"
                 },
                 "model": {
-                    "type": "text",
-                    "analyzer": "ngram_analyzer"
+                    "type": "text"
                 },
                 "country": {
                     "type": "keyword"
@@ -46,12 +44,10 @@
                     "type": "keyword"
                 },
                 "specification": {
-                    "type": "text",
-                    "analyzer": "openkoreantext-analyzer"
+                    "type": "text"
                 },
                 "description": {
-                    "type": "text",
-                    "analyzer": "openkoreantext-analyzer"
+                    "type": "text"
                 },
                 "category": {
                     "type": "keyword"

@@ -32,15 +32,13 @@
                     "type": "integer"
                 },
                 "title": {
-                    "type": "text",
-                    "analyzer": "ngram_analyzer"
+                    "type": "text"
                 },
                 "description": {
                     "type": "text"
                 },
                 "company_title": {
-                    "type": "text",
-                    "analyzer": "ngram_analyzer"
+                    "type": "text"
                 },
                 "company_description": {
                     "type": "text"

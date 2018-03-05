@@ -32,8 +32,7 @@
                     "type": "integer"
                 },
                 "applicant": {
-                    "type": "text",
-                    "analyzer": "ngram_analyzer"
+                    "type": "text"
                 },
                 "generic_name": {
                     "type": "text"

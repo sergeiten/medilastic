@@ -32,12 +32,10 @@
                     "type": "integer"
                 },
                 "applicant_name": {
-                    "type": "text",
-                    "analyzer": "ngram_analyzer"
+                    "type": "text"
                 },
                 "device_name": {
-                    "type": "text",
-                    "analyzer": "ngram_analyzer"
+                    "type": "text"
                 },
                 "medical_speciality": {
                     "type": "keyword"

@@ -32,12 +32,10 @@
                     "type": "integer"
                 },
                 "brand_name": {
-                    "type": "text",
-                    "analyzer": "ngram_analyzer"
+                    "type": "text"
                 },
                 "company_name": {
-                    "type": "text",
-                    "analyzer": "ngram_analyzer"
+                    "type": "text"
                 },
                 "device_description": {
                     "type": "text"

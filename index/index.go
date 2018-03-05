@@ -14,7 +14,7 @@ type Indexer interface {
 	Do() error
 }
 
-// Indexer ...
+// ElasticIndexer ...
 type ElasticIndexer struct {
 	ctx        context.Context
 	client     *elastic.Client
