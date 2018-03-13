@@ -26,3 +26,11 @@ quality:
 	golint -set_exit_status $(go list ./...)
 	megacheck ./...
 	gocyclo -over 12 $(GO_PACKAGES)
+
+.PHONY: index-all
+index-all:
+	go run cmd/mpindex/main.go -index=fda -mapping=mappings/fda.json
+	go run cmd/mpindex/main.go -index=kimes -mapping=mappings/kimes.json
+	go run cmd/mpindex/main.go -index=medica -mapping=mappings/medica.json
+	go run cmd/mpindex/main.go -index=pas -mapping=mappings/pas.json
+	go run cmd/mpindex/main.go -index=pma -mapping=mappings/pma.json
