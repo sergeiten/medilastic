@@ -32,6 +32,8 @@ type Kimes struct {
 	Manufacture   string `json:"manufacture"`
 	Specification string `json:"specification"`
 	Description   string `json:"description"`
+	Company       string `json:"company"`
+	Exhibitor     string `json:"exhibitor"`
 	Category      string `json:"category"`
 	Subcategory   string `json:"subcategory"`
 }
@@ -49,6 +51,10 @@ type Medica struct {
 type Pma struct {
 	ID          int    `json:"id"`
 	Applicant   string `json:"applicant"`
+	State       string `json:"state"`
+	City        string `json:"city"`
+	Street1     string `json:"street_1"`
+	Street2     string `json:"street_2"`
 	GenericName string `json:"generic_name"`
 	TradeName   string `json:"trade_name"`
 }

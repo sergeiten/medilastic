@@ -1,61 +1,62 @@
 {
-    "settings": {
-        "number_of_shards": 1,
-        "number_of_replicas": 0,
-        "analysis": {
-            "analyzer": {
-                "ngram_analyzer": {
-                    "type": "custom",
-                    "tokenizer": "my_tokenizer",
-                    "filter": [
-                        "lowercase"
-                    ]
-                }
-            },
-            "tokenizer": {
-                "my_tokenizer": {
-                    "type": "ngram",
-                    "min_gram": 3,
-                    "max_gram": 3,
-                    "token_chars": [
-                        "letter",
-                        "digit"
-                    ]
-                }
-            }
+  "settings": {
+    "number_of_shards": 1,
+    "number_of_replicas": 0,
+    "analysis": {
+      "analyzer": {
+        "ngram_analyzer": {
+          "type": "custom",
+          "tokenizer": "my_tokenizer",
+          "filter": ["lowercase"]
         }
-    },
-    "mappings": {
-        "kimes": {
-            "properties": {
-                "id": {
-                    "type": "integer"
-                },
-                "name": {
-                    "type": "text"
-                },
-                "model": {
-                    "type": "text"
-                },
-                "country": {
-                    "type": "keyword"
-                },
-                "manufacture": {
-                    "type": "keyword"
-                },
-                "specification": {
-                    "type": "text"
-                },
-                "description": {
-                    "type": "text"
-                },
-                "category": {
-                    "type": "keyword"
-                },
-                "subcategory": {
-                    "type": "keyword"
-                }
-            }
+      },
+      "tokenizer": {
+        "my_tokenizer": {
+          "type": "ngram",
+          "min_gram": 3,
+          "max_gram": 3,
+          "token_chars": ["letter", "digit"]
         }
+      }
     }
+  },
+  "mappings": {
+    "kimes": {
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "name": {
+          "type": "text"
+        },
+        "model": {
+          "type": "text"
+        },
+        "country": {
+          "type": "keyword"
+        },
+        "manufacture": {
+          "type": "keyword"
+        },
+        "specification": {
+          "type": "text"
+        },
+        "description": {
+          "type": "text"
+        },
+        "company": {
+          "type": "keyword"
+        },
+        "exhibitor": {
+          "type": "keyword"
+        },
+        "category": {
+          "type": "keyword"
+        },
+        "subcategory": {
+          "type": "keyword"
+        }
+      }
+    }
+  }
 }

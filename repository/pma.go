@@ -22,7 +22,7 @@ func NewPmaRepository(db *sql.DB) Repository {
 // Get return
 func (r PmaRepository) Get() (map[int]string, error) {
 	rows, err := r.DB.Query(`
-SELECT id, applicant, genericname, tradename
+SELECT id, applicant, state, city, street_1, street_2, genericname, tradename
 FROM pma_products`)
 	if err != nil {
 		return nil, err
@@ -35,7 +35,7 @@ FROM pma_products`)
 	for rows.Next() {
 		item := medilastic.Pma{}
 
-		err := rows.Scan(&item.ID, &item.Applicant, &item.GenericName, &item.TradeName)
+		err := rows.Scan(&item.ID, &item.Applicant, &item.State, &item.City, &item.Street1, &item.Street2, &item.GenericName, &item.TradeName)
 		if err != nil {
 			log.WithError(err).Error("failed to scan rows")
 		}

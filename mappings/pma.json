@@ -1,46 +1,53 @@
 {
-    "settings": {
-        "number_of_shards": 1,
-        "number_of_replicas": 0,
-        "analysis": {
-            "analyzer": {
-                "ngram_analyzer": {
-                    "type": "custom",
-                    "tokenizer": "my_tokenizer",
-                    "filter": [
-                        "lowercase"
-                    ]
-                }
-            },
-            "tokenizer": {
-                "my_tokenizer": {
-                    "type": "ngram",
-                    "min_gram": 3,
-                    "max_gram": 3,
-                    "token_chars": [
-                        "letter",
-                        "digit"
-                    ]
-                }
-            }
+  "settings": {
+    "number_of_shards": 1,
+    "number_of_replicas": 0,
+    "analysis": {
+      "analyzer": {
+        "ngram_analyzer": {
+          "type": "custom",
+          "tokenizer": "my_tokenizer",
+          "filter": ["lowercase"]
         }
-    },
-    "mappings": {
-        "pma": {
-            "properties": {
-                "id": {
-                    "type": "integer"
-                },
-                "applicant": {
-                    "type": "text"
-                },
-                "generic_name": {
-                    "type": "text"
-                },
-                "trade_name": {
-                    "type": "text"
-                }
-            }
+      },
+      "tokenizer": {
+        "my_tokenizer": {
+          "type": "ngram",
+          "min_gram": 3,
+          "max_gram": 3,
+          "token_chars": ["letter", "digit"]
         }
+      }
     }
+  },
+  "mappings": {
+    "pma": {
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "applicant": {
+          "type": "text"
+        },
+        "state": {
+          "type": "text"
+        },
+        "city": {
+          "type": "keyword"
+        },
+        "street_1": {
+          "type": "text"
+        },
+        "street_2": {
+          "type": "keyword"
+        },
+        "generic_name": {
+          "type": "text"
+        },
+        "trade_name": {
+          "type": "text"
+        }
+      }
+    }
+  }
 }
